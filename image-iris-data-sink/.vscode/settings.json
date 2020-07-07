@@ -1,0 +1,14 @@
+
+{
+    "objectscript.conn":
+    {
+        "active": true,
+        "label": "iris-data-sink",
+        "host": "localhost",
+        "port": 52773,
+        "username": "SuperUser",
+        "password": "sys",
+        "ns": "APP",
+        "https": false
+    }
+}
