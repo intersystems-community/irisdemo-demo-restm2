@@ -1,0 +1,82 @@
+# Starts the SpeedTest using IRIS Community. 
+#
+# This is good because it doesn't require an IRIS license to run.
+#
+# This is bad because IRIS Community has two important limitations:
+# - Max of 5 connections: So we won't be able to use a high number of threads
+# - Max Database size of 10Gb: So we won't be able to let the speed test run for too long
+#
+# But this configuration is good for development.
+version: '3.7'
+
+services:
+  htapui:
+    depends_on:
+      - htapmaster
+    container_name: htapui
+    hostname: htapui
+    image: intersystemsdc/irisdemo-demo-htap:ui-version-1.0.0
+    ports:
+    - "10000:4200" # Where Node Will be listening
+
+  iris-data-sink: 
+    # We can't use clean IRIS Community because its HEALTHCHECK period is too long.
+    # So we are going to use our irisdemo-base-db image.
+    #image: store/intersystems/iris-community:2019.3.0.309.0
+    # version-1.2 is based on IRIS Community 2019.3
+    # version-1.4 is based on IRIS Community 2019.4
+    # version-1.5.1 is based on IRIS Community 2020.1.0.197.0
+    # version-1.5.2 is based on IRIS Community 2020.2.0.196.0
+    image: intersystemsdc/irisdemo-demo-restm2:iris-data-sink-version-1.0.0
+    hostname: iris-data-sink
+    init: true
+    container_name: iris-data-sink
+    ports:
+    - "10001:52773" # 52773 is the webserver/management portal port: http://localhost:9092/csp/sys/UtilHome.csp
+
+  htapmaster:
+    depends_on: 
+      - iris-data-sink
+    container_name: htapmaster
+    hostname: htapmaster
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:master-version-1.0.0
+    ports:
+      - "10002:8080" # Where Springboot Will be listening
+    environment:
+      - MASTER_SPEEDTEST_TITLE=IRIS Multi Model
+      - START_CONSUMERS=false
+      - INGESTION_THREADS_PER_WORKER=2
+      - INGESTION_REST_URL=http://iris-data-sink:52773/csp/app/rest
+      - CONSUMER_JDBC_URL=jdbc:IRIS://iris-data-sink:51773/APP
+      - CONSUMER_JDBC_USERNAME=SuperUser
+      - CONSUMER_JDBC_PASSWORD=sys
+      - CONSUMER_THREADS_PER_WORKER=1
+      - CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS=0
+      - DATABASE_SIZE_IN_GB=1
+
+  ingest-worker1:
+    depends_on: 
+      - htapmaster
+    container_name: ingest-worker1
+    hostname: ingest-worker1
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:iris-rest-ingest-worker-version-1.0.0
+    ports:
+      - "10003:8080" # Where Springboot Will be listening
+    environment:
+      - MASTER_HOSTNAME=htapmaster
+      - MASTER_PORT=8080
+
+  # query-worker1:
+  #   depends_on: 
+  #     - htapmaster
+  #   container_name: query-worker1
+  #   hostname: query-worker1
+  #   init: true
+  #   image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-1.0.0
+  #   ports:
+  #     - "10004:8080" # Where Springboot Will be listening
+  #   environment:
+  #     - MASTER_HOSTNAME=htapmaster
+  #     - MASTER_PORT=8080
