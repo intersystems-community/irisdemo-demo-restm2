@@ -56,7 +56,7 @@ public class IRISWorker implements IWorker
 		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setBasicAuth("SuperUser", "sys");
+		headers.setBasicAuth(config.getingestionRESTUserName(), config.getingestionRESTPassword());
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		randomDataGenerator.initializeRandomMapping();
 
