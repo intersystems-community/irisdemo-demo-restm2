@@ -26,13 +26,16 @@
     <div class="app-config-section-wrapper">
         <form class="config-form-wrapper" [formGroup]="configFormGroup">
             <mat-form-field class="form-element">
-                <input matInput placeholder="JDBC URL" formControlName="ingestionJDBCURL">
+                <input matInput placeholder="REST Endpoint" formControlName="ingestionRESTEndpoint">
             </mat-form-field> 
             <mat-form-field class="form-element">
-                <input matInput placeholder="JDBC UserName" formControlName="ingestionJDBCUserName">
+                <input matInput placeholder="REST Schema" formControlName="ingestionRESTSchemaVersion">
+            </mat-form-field> 
+            <mat-form-field class="form-element">
+                <input matInput placeholder="REST UserName" formControlName="ingestionRESTUserName">
             </mat-form-field>
             <mat-form-field class="form-element">
-                <input matInput placeholder="JDBC Password" [type]="hideIngestPassword ? 'password' : 'text'" formControlName="ingestionJDBCPassword">
+                <input matInput placeholder="REST Password" [type]="hideIngestPassword ? 'password' : 'text'" formControlName="ingestionRESTPassword">
                 <button mat-icon-button matSuffix (click)="hideIngestPassword = !hideIngestPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideIngestPassword">
                     <mat-icon>{{hideIngestPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button> 
