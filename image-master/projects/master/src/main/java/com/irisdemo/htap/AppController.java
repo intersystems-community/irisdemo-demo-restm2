@@ -141,16 +141,21 @@ public class AppController {
             currentAggregatedMetrics = new Metrics(speedTestRunningStatus);
             
             final IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
-            if (!databaseHasBeenInitialized) {
-                logger.info("START speed test. Asking one worker to prepare the database...");
-                final String prepareURL = "http://" + ingestWorker.getHostname() + "/worker/prepare";
-                restTemplate.postForEntity(prepareURL, null, null);
-                databaseHasBeenInitialized = true;
-            } else {
-                logger.info("START speed test. Asking one worker to truncate the table...");
-                final String truncateTableURL = "http://" + ingestWorker.getHostname() + "/worker/truncateTable";
-                restTemplate.postForEntity(truncateTableURL, null, null);
-            }
+            // if (!databaseHasBeenInitialized) {
+            //     logger.info("START speed test. Asking one worker to prepare the database...");
+            //     final String prepareURL = "http://" + ingestWorker.getHostname() + "/worker/prepare";
+            //     restTemplate.postForEntity(prepareURL, null, null);
+            //     databaseHasBeenInitialized = true;
+            // } else {
+            //     logger.info("START speed test. Asking one worker to truncate the table...");
+            //     final String truncateTableURL = "http://" + ingestWorker.getHostname() + "/worker/truncateTable";
+            //     restTemplate.postForEntity(truncateTableURL, null, null);
+            // }
+
+            
+            logger.info("START speed test. Asking one worker to prepare the database...");
+            final String prepareURL = "http://" + ingestWorker.getHostname() + "/worker/reset";
+            restTemplate.postForEntity(prepareURL, null, null);
 
             logger.info("START speed test. Notifying all workers...");
 
@@ -338,10 +343,8 @@ public class AppController {
         config.setIngestionWaitTimeBetweenBatchesInMillis(newConfig.getIngestionWaitTimeBetweenBatchesInMillis());
         config.setIngestionBatchSize(newConfig.getIngestionBatchSize());
         config.setIngestionNumThreadsPerWorker(newConfig.getIngestionNumThreadsPerWorker());
+        config.setIngestionRESTEndpoint(newConfig.getIngestionRESTEndpoint());
 
-        config.setIngestionJDBCUserName(newConfig.getIngestionJDBCUserName());
-        config.setIngestionJDBCPassword(newConfig.getIngestionJDBCPassword());
-        config.setIngestionJDBCURL(newConfig.getIngestionJDBCURL());
 
         config.setInsertStatement(newConfig.getInsertStatement());
 

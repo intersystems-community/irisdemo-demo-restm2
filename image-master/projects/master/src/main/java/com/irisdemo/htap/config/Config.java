@@ -35,14 +35,16 @@ public class Config
 	/* 
 	INGESTION CONFIGURATION 
 	*/
-	private String ingestionJDBCURL;
-	private String ingestionJDBCUserName;
-	private String ingestionJDBCPassword;
+	// private String ingestionJDBCURL;
+	// private String ingestionJDBCUserName;
+	// private String ingestionJDBCPassword;
 	private int ingestionBatchSize;
 	private int ingestionNumThreadsPerWorker;
 	private String insertStatement;
 	private int ingestionWaitTimeBetweenBatchesInMillis;
 	private int numberOfActiveIngestionThreads;
+	private String RESTIngestionEndpoint;
+
 
 	/* 
 	CONSUMPTION CONFIGURATION 
@@ -286,35 +288,44 @@ public class Config
 		this.disableJournalForTruncateTable = disableJournalForTruncateTable;
 	}
 
-	public String getIngestionJDBCURL() {
-		return ingestionJDBCURL;
+	public String getIngestionRESTEndpoint() {
+		return RESTIngestionEndpoint;
 	}
-	
-	@Value( "${INGESTION_JDBC_URL}" )
-	public void setIngestionJDBCURL(String ingestionJDBCURL) {
-		logger.info("Setting INGESTION_JDBC_URL = " + ingestionJDBCURL);
-		this.ingestionJDBCURL = ingestionJDBCURL;
-	}
-
-	public String getIngestionJDBCUserName() {
-		return ingestionJDBCUserName;
-	}
-	
-	@Value( "${INGESTION_JDBC_USERNAME}" )
-	public void setIngestionJDBCUserName(String ingestionJDBCUserName) {
-		logger.info("Setting INGESTION_JDBC_USERNAME = " + ingestionJDBCUserName);
-		this.ingestionJDBCUserName = ingestionJDBCUserName;
+	@Value( "${INGESTION_REST_ENDPOINT}" )
+	public void setIngestionRESTEndpoint(String RESTIngestionEndpoint) {
+		logger.info("Setting INGESTION_REST_ENDPOINT = " + RESTIngestionEndpoint);
+		this.RESTIngestionEndpoint = RESTIngestionEndpoint;
 	}
 
-	public String getIngestionJDBCPassword() {
-		return ingestionJDBCPassword;
-	}
+	// public String getIngestionJDBCURL() {
+	// 	return ingestionJDBCURL;
+	// }
 	
-	@Value( "${INGESTION_JDBC_PASSWORD}" )
-	public void setIngestionJDBCPassword(String ingestionJDBCPassword) {
-		logger.info("Setting INGESTION_JDBC_PASSWORD = " + ingestionJDBCPassword);
-		this.ingestionJDBCPassword = ingestionJDBCPassword;
-	}
+	// @Value( "${INGESTION_JDBC_URL}" )
+	// public void setIngestionJDBCURL(String ingestionJDBCURL) {
+	// 	logger.info("Setting INGESTION_JDBC_URL = " + ingestionJDBCURL);
+	// 	this.ingestionJDBCURL = ingestionJDBCURL;
+	// }
+
+	// public String getIngestionJDBCUserName() {
+	// 	return ingestionJDBCUserName;
+	// }
+	
+	// @Value( "${INGESTION_JDBC_USERNAME}" )
+	// public void setIngestionJDBCUserName(String ingestionJDBCUserName) {
+	// 	logger.info("Setting INGESTION_JDBC_USERNAME = " + ingestionJDBCUserName);
+	// 	this.ingestionJDBCUserName = ingestionJDBCUserName;
+	// }
+
+	// public String getIngestionJDBCPassword() {
+	// 	return ingestionJDBCPassword;
+	// }
+	
+	// @Value( "${INGESTION_JDBC_PASSWORD}" )
+	// public void setIngestionJDBCPassword(String ingestionJDBCPassword) {
+	// 	logger.info("Setting INGESTION_JDBC_PASSWORD = " + ingestionJDBCPassword);
+	// 	this.ingestionJDBCPassword = ingestionJDBCPassword;
+	// }
 
 	public int getIngestionBatchSize() {
 		return ingestionBatchSize;
