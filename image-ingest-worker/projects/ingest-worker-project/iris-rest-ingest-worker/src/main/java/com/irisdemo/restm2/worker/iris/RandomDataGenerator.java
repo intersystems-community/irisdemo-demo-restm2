@@ -75,31 +75,33 @@ public class RandomDataGenerator
 		randomMappingInitialized = true;
 	}
 
-	public static void populateJSONRequest(JSONObject request, String threadPrefix, String schema)
+	public static void populateJSONRequest(JSONObject request, String threadPrefix, String schema, int recordNum)
 	{
+
+
 
 		int numberOfRandomValues = 999;
 		JSONObject address = (JSONObject)request.get("address");
 
-		address.put("street", randomStreets[(int)Math.random()*numberOfRandomValues]);
-		address.put("state", randomStates[(int)Math.random()*numberOfRandomValues]);
-		address.put("city", randomCities[(int)Math.random()*numberOfRandomValues]);	
+		address.put("street", randomStreets[(int)(Math.random()*numberOfRandomValues)]);
+		address.put("state", randomStates[(int)(Math.random()*numberOfRandomValues)]);
+		address.put("city", randomCities[(int)(Math.random()*numberOfRandomValues)]);
 
-		request.put("dob", randomDates[(int)Math.random()*numberOfRandomValues]);
-		request.put("account_id", threadPrefix);
+		request.put("dob", randomDates[(int)(Math.random()*numberOfRandomValues)]);
+		request.put("account_id", threadPrefix+recordNum);
 		request.put("address", address);
 
-		if (schema == "v1")
+		if (schema.equals("v1"))
 		{
 			address.remove("zip");
 			request.remove("fullName");
-			request.put("name", randomNames[(int)Math.random()*numberOfRandomValues]);
+			request.put("name", randomNames[(int)(Math.random()*numberOfRandomValues)]);
 		}
-		else if (schema =="v2")
+		else if (schema.equals("v2"))
 		{
 			request.remove("name");
-			request.put("fullName", randomNames[(int)Math.random()*numberOfRandomValues]);
-			request.put("zip", randomZips[(int)Math.random()*numberOfRandomValues]);
+			request.put("fullName", randomNames[(int)(Math.random()*numberOfRandomValues)]);
+			address.put("zip", randomZips[(int)(Math.random()*numberOfRandomValues)]);
 		}
 	}
 

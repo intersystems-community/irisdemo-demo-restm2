@@ -47,6 +47,7 @@ public class IRISWorker implements IWorker
     public CompletableFuture<Long> startOneFeed(String nodePrefix, int threadNum) throws IOException, RestClientException
     {	
 		long recordNum = 0;
+		String requestString = "";
 		
 		accumulatedMetrics.incrementNumberOfActiveIngestionThreads();
 
@@ -55,19 +56,23 @@ public class IRISWorker implements IWorker
 		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
+		headers.setBasicAuth("SuperUser", "sys");
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		randomDataGenerator.initializeRandomMapping();
+
+
+		String Iris_REST_Endpoint = config.getIngestionRESTEndpoint();
+		String schema = config.getIngestionRESTSchemaVersion();
 
 		try
 		{
 
 			int currentBatchSize = 0;
+			int currentRecord = 0;
 			String threadPrefix = nodePrefix+prefixes[threadNum];
 			JSONObject requestJSON = new JSONObject();
 			JSONObject addressJSON = new JSONObject();
 			requestJSON.put("address", addressJSON);
-			String Iris_REST_Endpoint = config.getIngestionRESTEndpoint();
-			String schema = config.getIngestionRESTSchemaVersion();
 
 			JSONObject requestJSONBatch = new JSONObject();
 			JSONArray requestJSONBatchArray = new JSONArray();
@@ -85,11 +90,12 @@ public class IRISWorker implements IWorker
 			
 			while(workerSemaphore.green())
 			{
-				RandomDataGenerator.populateJSONRequest(requestJSON, threadPrefix, schema);
+				RandomDataGenerator.populateJSONRequest(requestJSON, threadPrefix, schema, ++currentRecord);
+				
 
 				if (config.getIngestionBatchSize() == 1)
 				{
-					String requestString = requestJSON.toString();
+					requestString = requestJSON.toString();
 
 					HttpEntity<String> request = new HttpEntity<String>(requestString, headers);
 
@@ -97,31 +103,40 @@ public class IRISWorker implements IWorker
 
 					accumulatedMetrics.addToStats(1, requestString.getBytes().length);
 
-					Thread.sleep(config.getIngestionWaitTimeBetweenBatchesInMillis());
 				}
 				
 				else
 				{
 
 					//Creating Deep Copies of requestJSON
+
 					JSONObject requestJSONCopy = (JSONObject)requestJSON.clone();
 					//needed to make deep copy
 					JSONObject addressJSONCopy = (JSONObject)addressJSON.clone();
 					requestJSONCopy.put("address", addressJSONCopy);
 
 					requestJSONBatchArray.add(requestJSONCopy);
+					
 
 					if (currentBatchSize == config.getIngestionBatchSize())
 					{
-						String requestString = requestJSONBatch.toString();
+						requestString = requestJSONBatch.toString();
+
 
 						HttpEntity<String> request = new HttpEntity<String>(requestString, headers);
 
 						String response = restTemplate.postForObject(Iris_REST_Endpoint, request, String.class);
 
 						accumulatedMetrics.addToStats(currentBatchSize, requestString.getBytes().length);
-
-						Thread.sleep(config.getIngestionWaitTimeBetweenBatchesInMillis());
+						requestJSONBatch = new JSONObject();
+						requestJSONBatch.clear();
+						requestJSONBatchArray.clear();
+						requestJSONBatch.put("customers", requestJSONBatchArray);
+						if( config.getIngestionWaitTimeBetweenBatchesInMillis() > 0 )
+						{
+							Thread.sleep(config.getIngestionWaitTimeBetweenBatchesInMillis());
+						}
+						
 						currentBatchSize = 0;
 						
 
@@ -138,7 +153,8 @@ public class IRISWorker implements IWorker
 		catch(RestClientException restException)
 		{
 			logger.error("Ingestion worker #"+threadNum+" crashed with the following error:" + restException.getMessage());
-			throw restException;
+			logger.error("Schema Value is " + schema);
+			logger.error("Address being called is " + Iris_REST_Endpoint);
 
 		}
 
@@ -146,6 +162,12 @@ public class IRISWorker implements IWorker
 		{
 			logger.warn("Thread has been interrupted. Maybe the master asked it to stop: " + e.getMessage());
 		} 
+
+		catch (Exception e)
+		{
+
+			logger.error("Unhandled exception: " + e.getMessage());
+		}
 
 
 		accumulatedMetrics.decrementNumberOfActiveIngestionThreads();
