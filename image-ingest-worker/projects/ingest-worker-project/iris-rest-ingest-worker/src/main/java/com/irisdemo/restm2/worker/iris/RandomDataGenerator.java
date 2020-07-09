@@ -55,12 +55,14 @@ public class RandomDataGenerator
 
 		randomStates = new String[entries]; 
 		
+		randomCities = new String[entries];
+		
 		for(int i=0; i<entries; i++)
 		{
 			randomNames[i] = Util.randomName();
 			randomDates[i] = Util.randomMySQLStringTimeStamp();
 			randomStreets[i] = Util.randomStreet();
-			randomStates[i] = Util.randomAlphaNumeric(2);
+			randomStates[i] = Util.randomState();
 			randomCities[i] = Util.randomCity();
 		
 		}
