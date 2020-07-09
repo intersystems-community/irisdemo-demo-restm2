@@ -30,6 +30,8 @@ public class RandomDataGenerator
 	protected static String[] randomStates;
 
 	protected static String[] randomCities;
+
+	protected static String[] randomZips;
 	
     protected static boolean randomMappingInitialized = false;
     
@@ -54,8 +56,10 @@ public class RandomDataGenerator
 		randomStreets = new String[entries];
 
 		randomStates = new String[entries]; 
-		
+
 		randomCities = new String[entries];
+
+		randomZips = new String[entries];
 		
 		for(int i=0; i<entries; i++)
 		{
@@ -64,26 +68,42 @@ public class RandomDataGenerator
 			randomStreets[i] = Util.randomStreet();
 			randomStates[i] = Util.randomState();
 			randomCities[i] = Util.randomCity();
+			randomZips[i] = Util.randomAlphaNumeric(5);
 		
 		}
 				
 		randomMappingInitialized = true;
 	}
 
-	public static void populateJSONRequest(JSONObject request, String threadPrefix)
-	{	
+	public static void populateJSONRequest(JSONObject request, String threadPrefix, String schema)
+	{
+
 		int numberOfRandomValues = 999;
-
-
 		JSONObject address = (JSONObject)request.get("address");
+
 		address.put("street", randomStreets[(int)Math.random()*numberOfRandomValues]);
 		address.put("state", randomStates[(int)Math.random()*numberOfRandomValues]);
-		address.put("city", randomCities[(int)Math.random()*numberOfRandomValues]);
+		address.put("city", randomCities[(int)Math.random()*numberOfRandomValues]);	
 
 		request.put("dob", randomDates[(int)Math.random()*numberOfRandomValues]);
-		request.put("name", randomNames[(int)Math.random()*numberOfRandomValues]);
 		request.put("account_id", threadPrefix);
 		request.put("address", address);
 
+		if (schema == "v1")
+		{
+			address.remove("zip");
+			request.remove("fullName");
+			request.put("name", randomNames[(int)Math.random()*numberOfRandomValues]);
+		}
+		else if (schema =="v2")
+		{
+			request.remove("name");
+			request.put("fullName", randomNames[(int)Math.random()*numberOfRandomValues]);
+			request.put("zip", randomZips[(int)Math.random()*numberOfRandomValues]);
+		}
 	}
+
+
+
+	
 }
