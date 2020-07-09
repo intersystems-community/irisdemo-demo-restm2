@@ -10,11 +10,11 @@
 version: '3.7'
 
 services:
-  htapui:
+  ui:
     depends_on:
-      - htapmaster
-    container_name: htapui
-    hostname: htapui
+      - master
+    container_name: ui
+    hostname: ui
     image: intersystemsdc/irisdemo-demo-restm2:ui-version-1.0.0
     ports:
     - "10000:4200" # Where Node Will be listening
@@ -34,11 +34,11 @@ services:
     ports:
     - "10001:52773" # 52773 is the webserver/management portal port: http://localhost:9092/csp/sys/UtilHome.csp
 
-  htapmaster:
+  master:
     depends_on: 
       - iris-data-sink
-    container_name: htapmaster
-    hostname: htapmaster
+    container_name: master
+    hostname: master
     init: true
     image: intersystemsdc/irisdemo-demo-restm2:master-version-1.0.0
     ports:
@@ -46,10 +46,10 @@ services:
     environment:
       - MASTER_SPEEDTEST_TITLE=IRIS Multi Model
       - START_CONSUMERS=false
-      - INGESTION_BATCH_SIZE=500
+      - INGESTION_BATCH_SIZE=1
       - INGESTION_THREADS_PER_WORKER=2
       - INGESTION_REST_ENDPOINT=http://iris-data-sink:52773/csp/app/rest
-      - INGESTION_REST_SCHEMA_VERSION=v2
+      - INGESTION_REST_SCHEMA_VERSION=v1
       - CONSUMER_JDBC_URL=jdbc:IRIS://iris-data-sink:51773/APP
       - INGESTION_REST_USERNAME=SuperUser
       - INGESTION_REST_PASSWORD=sys
@@ -59,7 +59,7 @@ services:
 
   ingest-worker1:
     depends_on: 
-      - htapmaster
+      - master
     container_name: ingest-worker1
     hostname: ingest-worker1
     init: true
@@ -67,7 +67,7 @@ services:
     ports:
       - "10003:8080" # Where Springboot Will be listening
     environment:
-      - MASTER_HOSTNAME=htapmaster
+      - MASTER_HOSTNAME=master
       - MASTER_PORT=8080
 
   # query-worker1:
@@ -80,5 +80,5 @@ services:
   #   ports:
   #     - "10004:8080" # Where Springboot Will be listening
   #   environment:
-  #     - MASTER_HOSTNAME=htapmaster
+  #     - MASTER_HOSTNAME=master
   #     - MASTER_PORT=8080

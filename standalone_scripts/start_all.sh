@@ -33,7 +33,7 @@ echo '**************************************************************************
 printf "${NOCOLOR}\n"
 
 export LOG_FILENAME=master.log
-../../image-master/projects/master.jar start --server.port=8080
+../image-master/projects/master.jar start --server.port=8080
 echo 'Waiting 5 seconds for master to finish starting...'
 sleep 5
 
@@ -44,7 +44,7 @@ echo '**************************************************************************
 printf "${NOCOLOR}\n"
 
 export LOG_FILENAME=ingestion_worker.log
-../../image-ingest-worker/projects/iris-rest-ingest-worker.jar start --server.port=8181
+../image-ingest-worker/projects/iris-rest-ingest-worker.jar start --server.port=8181
 
 # printf "${PURPLE}\n"
 # echo '********************************************************************************'
@@ -53,7 +53,7 @@ export LOG_FILENAME=ingestion_worker.log
 # printf "${NOCOLOR}\n"
 
 # export LOG_FILENAME=query_worker.log
-# ../../image-query-worker/projects/iris-jdbc-query-worker.jar start --server.port=8282
+# ../image-query-worker/projects/iris-jdbc-query-worker.jar start --server.port=8282
 
 printf "${PURPLE}\n"
 echo '********************************************************************************'
@@ -78,4 +78,4 @@ echo "the services for you."
 echo '********************************************************************************'
 printf "${NOCOLOR}\n"
 
-(cd ../../image-ui && npm run standalone)
+(cd ../image-ui && npm run standalone)

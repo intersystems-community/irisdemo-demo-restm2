@@ -8,7 +8,7 @@ echo 'Stopping Master'
 echo '********************************************************************************'
 printf "${NOCOLOR}\n"
 
-../../image-master/projects/master.jar stop
+../image-master/projects/master.jar stop
 
 printf "${PURPLE}\n"
 echo '********************************************************************************'
@@ -16,7 +16,7 @@ echo 'Stopping IRIS JDBC Ingestion Worker'
 echo '********************************************************************************'
 printf "${NOCOLOR}\n"
 
-../../image-ingest-worker/projects/iris-jdbc-ingest-worker.jar stop
+../image-ingest-worker/projects/iris-jdbc-ingest-worker.jar stop
 
 printf "${PURPLE}\n"
 echo '********************************************************************************'
@@ -24,7 +24,7 @@ echo 'Stopping IRIS JDBC Query Worker'
 echo '********************************************************************************'
 printf "${NOCOLOR}\n"
 
-../../image-query-worker/projects/iris-jdbc-query-worker.jar stop
+../image-query-worker/projects/iris-jdbc-query-worker.jar stop
 
 printf "${PURPLE}\n"
 echo '********************************************************************************'
