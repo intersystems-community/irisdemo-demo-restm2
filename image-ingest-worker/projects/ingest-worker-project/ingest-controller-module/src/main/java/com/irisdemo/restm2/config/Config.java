@@ -31,9 +31,8 @@ public class Config
 	private int ingestionBatchSize;
 	private int ingestionNumThreadsPerWorker;
 	private int ingestionWaitTimeBetweenBatchesInMillis;
-	private String RESTIngestionEndpoint;
-	//TODO
-	//private String RESTIngestionEndpointBATCH;
+	private String ingestionRESTEndpoint;
+	private String ingestionRESTSchemaVersion;
 
 	
 	/*
@@ -243,15 +242,26 @@ public class Config
 		this.tableTruncateStatement = tableTruncateStatement;
 	}
 
-	public void setRESTIngestionEndpoint(String restEndPnt)
+	public void setIngestionRESTEndpoint(String restEndPoint)
 	{
 		logger.info("Got REST endpoint.");
-		RESTIngestionEndpoint = restEndPnt;
+		ingestionRESTEndpoint = restEndPoint;
 	}
 
-	public String getRESTIngestionEndpoint()
+	public String getIngestionRESTEndpoint()
 	{
-		return RESTIngestionEndpoint;
+		return ingestionRESTEndpoint;
+	}
+
+	public void setIngestionRESTSchemaVersion(String restSchemaVersion)
+	{
+		logger.info("Got REST schema version.");
+		ingestionRESTSchemaVersion = restSchemaVersion;
+	}
+
+	public String getIngestionRESTSchemaVersion()
+	{
+		return ingestionRESTSchemaVersion;
 	}
 
 

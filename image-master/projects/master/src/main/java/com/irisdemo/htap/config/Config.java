@@ -43,7 +43,8 @@ public class Config
 	private String insertStatement;
 	private int ingestionWaitTimeBetweenBatchesInMillis;
 	private int numberOfActiveIngestionThreads;
-	private String RESTIngestionEndpoint;
+	private String ingestionRESTEndpoint;
+	private String ingestionRESTSchemaVersion;
 
 
 	/* 
@@ -289,12 +290,20 @@ public class Config
 	}
 
 	public String getIngestionRESTEndpoint() {
-		return RESTIngestionEndpoint;
+		return ingestionRESTEndpoint;
 	}
 	@Value( "${INGESTION_REST_ENDPOINT}" )
-	public void setIngestionRESTEndpoint(String RESTIngestionEndpoint) {
-		logger.info("Setting INGESTION_REST_ENDPOINT = " + RESTIngestionEndpoint);
-		this.RESTIngestionEndpoint = RESTIngestionEndpoint;
+	public void setIngestionRESTEndpoint(String ingestionRESTEndpoint) {
+		logger.info("Setting INGESTION_REST_ENDPOINT = " + ingestionRESTEndpoint);
+		this.ingestionRESTEndpoint = ingestionRESTEndpoint;
+	}
+	public String getIngestionRESTSchemaVersion() {
+		return ingestionRESTSchemaVersion;
+	}
+	@Value( "${INGESTION_REST_SCHEMA_VERSION}" )
+	public void setIngestionRESTSchemaVersion(String ingestionRESTSchemaVersion) {
+		logger.info("Setting INGESTION_REST_SCHEMA_VERSION = " + ingestionRESTSchemaVersion);
+		this.ingestionRESTSchemaVersion = ingestionRESTSchemaVersion;
 	}
 
 	// public String getIngestionJDBCURL() {

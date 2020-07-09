@@ -14,7 +14,8 @@ public class RESTMasterConfig
 	public boolean disableJournalForTruncateTable;
 	public int databaseSizeInGB;
 	public int ingestionWaitTimeBetweenBatchesInMillis;
-	public String RESTIngestionEndpoint;
+	public String ingestionRESTEndpoint;
+	public String ingestionRESTSchemaVersion;
 	
 	/*
 	 * Statements

@@ -48,6 +48,7 @@ services:
       - START_CONSUMERS=false
       - INGESTION_THREADS_PER_WORKER=2
       - INGESTION_REST_ENDPOINT=http://iris-data-sink:52773/csp/app/rest
+      - INGESTION_REST_SCHEMA_VERSION=v1
       - CONSUMER_JDBC_URL=jdbc:IRIS://iris-data-sink:51773/APP
       - CONSUMER_JDBC_USERNAME=SuperUser
       - CONSUMER_JDBC_PASSWORD=sys
