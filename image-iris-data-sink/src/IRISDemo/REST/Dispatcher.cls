@@ -18,11 +18,34 @@ Parameter CHARSET = "utf-8";
 XData UrlMap
 {
 <Routes>
-		<Route Url="/" Method="post" Call="Create" />
+		<Route Url="/v1" Method="post" Call="CreateV1" />
+		<Route Url="/v1/batch" Method="post" Call="CreateV1Batch" />
+		<Route Url="/v2" Method="post" Call="CreateV2" />
+		<Route Url="/v2/batch" Method="post" Call="CreateV2Batch" />
 	</Routes>
 }
 
-ClassMethod Create() As %Status
+ClassMethod CreateV1() As %Status
+{
+	Quit ..Create("V1")
+}
+
+ClassMethod CreateV2() As %Status
+{
+	Quit ..Create("V2")
+}
+
+ClassMethod CreateV1Batch() As %Status
+{
+	Quit ..Create("V1", 1)
+}
+
+ClassMethod CreateV2Batch() As %Status
+{
+	Quit ..Create("V2", 1)
+}
+
+ClassMethod Create(pVersion As %String, pBatchMode As %Boolean = 0) As %Status
 {
 	Set tSC = $$$OK
 	Try
@@ -32,10 +55,23 @@ ClassMethod Create() As %Status
 		Set response = {}
 		Set response.status = ..#HTTP200OK
 
-		Set original = ##class(Original.Customer).%New()
+		// Instantiating the right class for the version
+		If pBatchMode
+		{
+			Set tClassName="Original."_pVersion_".CustomerBatch"
+		}
+		Else 
+		{
+			Set tClassName="Original."_pVersion_".Customer"
+		}
+		
+		Set original = $classmethod(tClassName, "%New")
+
+		// Importing the JSON into the instance
 		Set tSC = original.%JSONImport(%request.Content)
 		Quit:$$$ISERR(tSC)
 
+		// Saving to disk
 		Set tSC = original.%Save()
 		Quit:$$$ISERR(tSC)
 
