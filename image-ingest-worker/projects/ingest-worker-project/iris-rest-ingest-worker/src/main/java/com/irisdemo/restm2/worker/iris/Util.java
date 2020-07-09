@@ -1,29 +1,34 @@
 package com.irisdemo.restm2.worker.iris;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.util.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.text.SimpleDateFormat;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ClassPathResource;
 
 import java.util.Random;
 
 public class Util
 {    
-    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	private static final String[] FIRST_NAMES = {"Andrew", "Bob", "Charles", "Dina" , "Elbert", "Francesca", "Gabriel", "Hue", "Isabella", 
+												"Juana", "Kathryn", "Luis", "Mike", "Nora", "Oswald", "Patty" ,"Quinn",
+												"Robert", "Sandy", "Trish", "Umar", "Vivian", "Waldo", "Xavier", "Yusef", "Zoe"};
+	private static final String[] LAST_NAMES = {"Aranda", "Brooks", "Campbell", "Dunn", "Eparvier", "Fabregas", "Gump", "Hernandez", "Iacobelli",
+												"Jackson", "Kringle", "Lopez", "Maldonado", "Newman", "Oppenheimer" , "Packer", "Quintana",
+												"Robertson", "Sacher", "Tadema", "Ubacke", "Valdez", "Wright", "Xanders", "Yapp", "Zafra"};
+	private static final String[] STATES = {"AL", "AK", "AZ" , "AR" ,"CA", "CO", "CT", "DE" , "FL" ,"GA", "HI", "ID", "IL" , "IN" ,"IA", "KS", "KY", "LA" , "ME" ,"MD", "MA", "MI", "MN" , "MO" ,"MT", 
+											"NE", "NV", "NH" , "NJ" ,"NM", "NY", "NC", "ND" , "OH" ,"OK", "OR", "PA", "RI" , "SC" ,"SD", "TN", "TX", "UT" , "VT" ,"VA", "WA", "WV", "WI" , "WY" ,"PR" };
     
-    public static String randomAlphaNumeric(int count) 
+	
+	private static final String [] CITY = {"Boston", "Jacksonville", "Orlando", "Charlston", "San Francisco", "Cambridge", "New Cambridge", "York", "San Juan", "London", "Gondor",
+											"Isengard", "San Fransokyo", "Tokyo", "Berlin", "New Boston"};
+	private static final String [] STREET = {"Allston", "Barney", "Crom" , "Downtown" ,"Elf", "Dark", "Ent", "Future" , "Grand" ,"Hotel", "India", "Juliet", 
+											"Kilo" , "Lime" ,"Mount"};
+
+	private static final String [] STREET_ENDING = {"Alley", "Road", "Way", "Avenue", "Boulevard", "Branch", "Common", "Creek", "Drive"};
+										
+										
+	
+	public static String randomAlphaNumeric(int count) 
     {
     	StringBuilder builder = new StringBuilder();
 	    while (count-- != 0) 
@@ -33,12 +38,40 @@ public class Util
 	    }
 	    
 	    return builder.toString();
-    }
+	}
+	
+	public static String randomName()
+	{
+		
+		String name = FIRST_NAMES[(int)(Math.random() * (FIRST_NAMES.length-1))] + " " + LAST_NAMES[(int)(Math.random() * (LAST_NAMES.length-1))] ;
+		return name; 
+	}
+
+	public static String randomState()
+	{
+		return STATES[(int)(Math.random()*(STATES.length-1))];
+	}
+
+	public static String randomStreet()
+	{
+		
+		String street = STREET[(int)(Math.random() * (STREET.length-1))] + " " + STREET_ENDING[(int)(Math.random() * (STREET_ENDING.length-1))] ;
+		return street;
+	}
+
+	public static String randomCity()
+	{
+		
+		return CITY[(int)(Math.random()*(CITY.length-1))];
+	}
+
+	
+	
+
     
     public static Date randomDate()
     {
     	Random  rnd;
-    	Date    dt;
     	long    ms;
 
     	// Get a new random instance, seeded from the clock
@@ -63,7 +96,9 @@ public class Util
     {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	return sdf.format(randomDate());
-    }
+	}
+	
+
     
     
 }

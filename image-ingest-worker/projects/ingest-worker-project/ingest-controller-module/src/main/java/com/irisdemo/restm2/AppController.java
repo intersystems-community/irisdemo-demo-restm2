@@ -32,17 +32,25 @@ public class AppController
         return 1;
     }
 
-    @PostMapping(value = "/worker/prepare")
-    public void prepareDatabaseForSpeedTest() throws Exception 
+
+    // @PostMapping(value = "/worker/prepare")
+    // public void prepareDatabaseForSpeedTest() throws Exception 
+    // {
+    //     workerService.prepareDatabaseForSpeedTest();
+    // }
+
+    // @PostMapping(value = "/worker/truncateTable")
+    // public void truncateTable() throws Exception 
+    // {
+    //     workerService.truncateTable();
+    // }
+
+    @PostMapping(value="/worker/reset")
+    public void reset() throws Exception, IOException, SQLException 
     {
-        workerService.prepareDatabaseForSpeedTest();
+        workerService.resetDemo();
     }
 
-    @PostMapping(value = "/worker/truncateTable")
-    public void truncateTable() throws Exception 
-    {
-        workerService.truncateTable();
-    }
 
     @PostMapping(value = "/worker/startSpeedTest")
     public void startSpeedTest() throws Exception, IOException, SQLException 

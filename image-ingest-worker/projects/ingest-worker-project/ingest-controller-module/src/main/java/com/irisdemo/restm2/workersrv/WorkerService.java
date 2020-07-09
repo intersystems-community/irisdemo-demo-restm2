@@ -47,19 +47,27 @@ public class WorkerService
 	 * Called from com.irisdemo.htap.AppController
 	 * @throws Exception
 	 */
-    public void prepareDatabaseForSpeedTest() throws Exception 
-    {
-    	logger.info("Master requested this worker to prepare the database for the speed test.");
-    	worker.prepareDatabaseForSpeedTest();
-    	logger.info("Database has been prepared.");
-    }
+    // public void prepareDatabaseForSpeedTest() throws Exception 
+    // {
+    // 	logger.info("Master requested this worker to prepare the database for the speed test.");
+    // 	worker.prepareDatabaseForSpeedTest();
+    // 	logger.info("Database has been prepared.");
+    // }
 
-    public void truncateTable() throws Exception 
+
+	/**
+	 * Called from com.irisdemo.htap.AppController
+	 * @throws Exception
+	 */
+    public void resetDemo() throws Exception 
     {
-    	logger.info("Master requested this worker to truncate the table.");
-    	worker.truncateTable();
-    	logger.info("Table has been truncated.");
-    }
+		//TODO
+		
+		// logger.info("Master requested this worker to reset the demo.");
+		// worker.resetDemo();
+		// logger.info("Demo has been reset. (DB Cleaned)");
+	}
+	
 
 	/**
 	 * Called from com.irisdemo.htap.AppController

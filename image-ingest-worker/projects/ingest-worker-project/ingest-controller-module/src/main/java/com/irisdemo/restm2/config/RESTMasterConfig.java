@@ -8,15 +8,13 @@ public class RESTMasterConfig
 	/* 
 	INGESTION CONFIGURATION 
 	*/
-	public String ingestionJDBCURL;
-	public String ingestionJDBCUserName;
-	public String ingestionJDBCPassword;
 	public int ingestionBatchSize;
 	public int ingestionNumThreadsPerWorker;
 	public boolean disableJournalForDropTable;
 	public boolean disableJournalForTruncateTable;
 	public int databaseSizeInGB;
 	public int ingestionWaitTimeBetweenBatchesInMillis;
+	public String RESTIngestionEndpoint;
 	
 	/*
 	 * Statements

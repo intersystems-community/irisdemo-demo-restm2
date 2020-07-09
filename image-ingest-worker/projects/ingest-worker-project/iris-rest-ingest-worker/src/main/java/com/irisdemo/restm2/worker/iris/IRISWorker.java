@@ -1,9 +1,6 @@
 package com.irisdemo.restm2.worker.iris;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
@@ -11,8 +8,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.irisdemo.restm2.config.Config;
 import com.irisdemo.restm2.workersrv.IWorker;
@@ -35,164 +39,185 @@ public class IRISWorker implements IWorker
     protected Config config;    
     
     @Autowired
-    protected WorkerDBUtils workerDBUtils;
+    protected RandomDataGenerator randomDataGenerator;
     
 	protected static char[] prefixes = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
 	@Async("workerExecutor")
-    public CompletableFuture<Long> startOneFeed(String nodePrefix, int threadNum) throws IOException, SQLException
+    public CompletableFuture<Long> startOneFeed(String nodePrefix, int threadNum) throws IOException, RestClientException
     {	
 		long recordNum = 0;
-		long batchSizeInBytes;
 		
 		accumulatedMetrics.incrementNumberOfActiveIngestionThreads();
 
-		Connection connection = workerDBUtils.getDataSource().getConnection();
-    	
 		logger.info("Ingestion worker #"+threadNum+" started.");
-		
-		connection.setAutoCommit(false);
-		
-		PreparedStatement preparedStatement = connection.prepareStatement(config.getInsertStatement());
 
-		int parameterCount = preparedStatement.getParameterMetaData().getParameterCount();
-		
-		workerDBUtils.initializeRandomMapping(connection);
-		
-    	try
-    	{    		
-    		String threadPrefix = nodePrefix+prefixes[threadNum];
-    		
-    		int currentBatchSize;
-        	
-	    	while(workerSemaphore.green())
-	    	{
-	    		currentBatchSize = 0;
-	    		batchSizeInBytes = 0;
-	    		
-	    		while(workerSemaphore.green())
-	    		{
-	    			if (currentBatchSize==config.getIngestionBatchSize()) 
-	    				break;
-	    			
-	    			batchSizeInBytes+= WorkerDBUtils.pupulatePreparedStatement(parameterCount, ++recordNum, threadPrefix, preparedStatement);
-	    		
-	    			preparedStatement.addBatch();
-	    			preparedStatement.clearParameters();
-	    			currentBatchSize++;	    			
-	    		}
+		String Iris_REST_Endpoint= config.getRESTIngestionEndpoint();
 
-				if(workerSemaphore.green())
+		RestTemplate restTemplate = new RestTemplate();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		randomDataGenerator.initializeRandomMapping();
+
+
+
+		try
+		{
+			String threadPrefix = nodePrefix+prefixes[threadNum];
+			JSONObject requestJSON = new JSONObject();
+			JSONObject addressJSON = new JSONObject();
+			requestJSON.put("address", addressJSON);
+			
+			int currentBatchSize = 0;
+			while(workerSemaphore.green())
+			{
+				RandomDataGenerator.populateJSONRequest(requestJSON, threadPrefix);
+
+				String requestString = requestJSON.toString();
+
+				HttpEntity<String> request = new HttpEntity<String>(requestString, headers);
+
+				String response = restTemplate.postForObject(Iris_REST_Endpoint, request, String.class);
+
+				currentBatchSize++;
+				recordNum++;
+
+				accumulatedMetrics.addToStats(1, requestString.getBytes().length);
+
+				//Simulating batch behavior by sending n=config.getIngestionBatchSize() requests, and waiting.
+				if(currentBatchSize == config.getIngestionBatchSize())
 				{
-					preparedStatement.executeBatch();
-					preparedStatement.clearBatch();
-					connection.commit();
-					accumulatedMetrics.addToStats(currentBatchSize, batchSizeInBytes);
-
+					currentBatchSize = 0;
 					if (config.getIngestionWaitTimeBetweenBatchesInMillis()>0)
 					{
 						Thread.sleep(config.getIngestionWaitTimeBetweenBatchesInMillis());
 					}
+
 				}
-	    	}	
+				
+
+			}
+
+
 			
-		} 
-    	catch (SQLException sqlException) 
-    	{
-			logger.error("Ingestion worker #"+threadNum+" crashed with the following error:" + sqlException.getMessage());
-			throw sqlException;
-		} 
+		}
+
+		catch(RestClientException restException)
+		{
+			logger.error("Ingestion worker #"+threadNum+" crashed with the following error:" + restException.getMessage());
+			throw restException;
+
+		}
+
 		catch (InterruptedException e) 
 		{
 			logger.warn("Thread has been interrupted. Maybe the master asked it to stop: " + e.getMessage());
 		} 
-    	finally
-    	{
-    		connection.close();
-    	}
-		
+
+
 		accumulatedMetrics.decrementNumberOfActiveIngestionThreads();
 
     	logger.info("Ingestion worker #"+threadNum+" finished.");
     	return CompletableFuture.completedFuture(recordNum);
-	}
-	
-	@Override
-	public void prepareDatabaseForSpeedTest() throws Exception
-    {
-		Connection connection = workerDBUtils.getDataSource().getConnection();
+	 }
+
+
+
+	// @Async("workerExecutor")
+    // public CompletableFuture<Long> startOneFeedBATCH(String nodePrefix, int threadNum) throws IOException, RestClientException
+    // {	
+	// 	long recordNum = 0;
 		
-		try
-		{
-			workerDBUtils.createIRISDisableJournalProc(connection);
-			workerDBUtils.createIRISExpandDatabaseProc(connection);
+	// 	accumulatedMetrics.incrementNumberOfActiveIngestionThreads();
+
+	// 	logger.info("Ingestion worker #"+threadNum+" started.");
+
+	// 	String Iris_REST_Endpoint= config.getRESTIngestionEndpointBATCH();
+
+	// 	RestTemplate restTemplate = new RestTemplate();
+
+	// 	HttpHeaders headers = new HttpHeaders();
+	// 	headers.setContentType(MediaType.APPLICATION_JSON);
+	// 	randomDataGenerator.initializeRandomMapping();
+
+
+	// 	try
+	// 	{
+	// 		String threadPrefix = nodePrefix+prefixes[threadNum];
 			
-			WorkerDBUtils.expandDatabase(connection, config.getDatabaseSizeInGB());
+	// 		int currentBatchSize = 0;
 
-			if (config.getDisableJournalForDropTable())
-			{
-				//IRIS Specific: Temporarily Disable journal for a possible DROP TABLE of millions of records.
-				WorkerDBUtils.disableJournalForConnection(connection, true);
-			}
+	// 		JSONArray requestArray = new JSONArray();
 
-			try
-			{
-				workerDBUtils.dropTable(connection);
-			}
-			catch (SQLException exception)
-			{
-				if (exception.getErrorCode()==30) //Table or view not found
-				{
-					
-				}
-				else if (exception.getMessage().startsWith("Unknown table"))
-				{
-					
-				}
-				else
-				{
-					throw exception;
-				}
+	// 		while(workerSemaphore.green())
+	// 		{
+	// 			JSONObject requestJSON = new JSONObject();
+	// 			JSONObject addressJSON = new JSONObject();
+	// 			requestJSON.put("address", addressJSON);
+
+	// 			RandomDataGenerator.populateJSONRequest(requestJSON, threadPrefix);
+
+	// 			requestArray.add(requestJSON);
+	// 			currentBatchSize++;
+	// 			recordNum++;
+
 				
-			}
-			
-			workerDBUtils.createTable(connection);
-			
-			if (config.getDisableJournalForDropTable())
-			{
-				// Turning journal back on
-				WorkerDBUtils.disableJournalForConnection(connection, false);
-			}
 
-		}
-		catch (Exception e)
-		{
-			throw e;
-		}
-		finally
-		{
-			connection.close();
-		}
-    	
-    }
+	// 			if(currentBatchSize == config.getIngestionBatchSize())
+	// 			{
+	// 				String requestString = requestArray.toString();
+	// 				HttpEntity<String> request = new HttpEntity<String>(requestString, headers);
+	// 				String response = restTemplate.postForObject(Iris_REST_Endpoint, request, String.class);
+	// 				accumulatedMetrics.addToStats(currentBatchSize, requestString.getBytes().length);
+
+	// 				currentBatchSize = 0;
+	// 				if (config.getIngestionWaitTimeBetweenBatchesInMillis()>0)
+	// 				{
+	// 					Thread.sleep(config.getIngestionWaitTimeBetweenBatchesInMillis());
+	// 				}
+
+	// 			}
+	// 		}
+				
+
+
+
+	// 	}
+	// 	catch(RestClientException restException)
+	// 	{
+	// 		logger.error("Ingestion worker #"+threadNum+" crashed with the following error:" + restException.getMessage());
+	// 		throw restException;
+
+	// 	}
+
+	// 	catch (InterruptedException e) 
+	// 	{
+	// 		logger.warn("Thread has been interrupted. Maybe the master asked it to stop: " + e.getMessage());
+	// 	} 
+
+
+	// 	accumulatedMetrics.decrementNumberOfActiveIngestionThreads();
+
+    // 	logger.info("Ingestion worker #"+threadNum+" finished.");
+    // 	return CompletableFuture.completedFuture(recordNum);
+	//  }
 	
-	@Override
-	public void truncateTable() throws Exception
-    {
-		Connection connection = workerDBUtils.getDataSource().getConnection();
-		
-		try
-		{
-			workerDBUtils.truncateTable(connection);
-		}
-		catch (Exception e)
-		{
-			throw e;
-		}
-		finally
-		{
-			connection.close();
-		}
-    	
-    }
+	
+
+
+
+
+
+
+	 @Override
+	 public void resetDemo() throws Exception
+	 {
+		 //TODO
+		 
+		 //MAKE REST CALL TO IRIS, WHICH THEN EMPTIES & TRUNCATES TABLE TABLE
+	
+	}
+
+	
 }

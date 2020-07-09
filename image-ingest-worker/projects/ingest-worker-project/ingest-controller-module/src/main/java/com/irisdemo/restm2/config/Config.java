@@ -7,9 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.boot.web.servlet.context.ServletWebServerInitializedEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.boot.web.server.LocalServerPort;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -31,13 +28,13 @@ public class Config
 	private boolean disableJournalForDropTable;
 	private boolean disableJournalForTruncateTable;
 
-	
-	private String ingestionJDBCURL;
-	private String ingestionJDBCUserName;
-	private String ingestionJDBCPassword;
 	private int ingestionBatchSize;
 	private int ingestionNumThreadsPerWorker;
 	private int ingestionWaitTimeBetweenBatchesInMillis;
+	private String RESTIngestionEndpoint;
+	//TODO
+	//private String RESTIngestionEndpointBATCH;
+
 	
 	/*
 	 * Statements
@@ -165,33 +162,6 @@ public class Config
 		ingestionNumThreadsPerWorker=value;
 	}
 
-	public String getIngestionJDBCURL() {
-		return ingestionJDBCURL;
-	}
-	
-	public void setIngestionJDBCURL(String ingestionJDBCURL) {
-		logger.info("Setting INGESTION_JDBC_URL = " + ingestionJDBCURL);
-		this.ingestionJDBCURL = ingestionJDBCURL;
-	}
-
-	public String getIngestionJDBCUserName() {
-		return ingestionJDBCUserName;
-	}
-	
-	public void setIngestionJDBCUserName(String ingestionJDBCUserName) {
-		logger.info("Setting INGESTION_JDBC_USERNAME = " + ingestionJDBCUserName);
-		this.ingestionJDBCUserName = ingestionJDBCUserName;
-	}
-
-	public String getIngestionJDBCPassword() {
-		return ingestionJDBCPassword;
-	}
-	
-	public void setIngestionJDBCPassword(String ingestionJDBCPassword) {
-		logger.info("Setting INGESTION_JDBC_PASSWORD = " + ingestionJDBCPassword);
-		this.ingestionJDBCPassword = ingestionJDBCPassword;
-	}
-
 	public int getIngestionBatchSize() {
 		return ingestionBatchSize;
 	}
@@ -272,4 +242,17 @@ public class Config
 		logger.info("Got table truncate statement.");
 		this.tableTruncateStatement = tableTruncateStatement;
 	}
+
+	public void setRESTIngestionEndpoint(String restEndPnt)
+	{
+		logger.info("Got REST endpoint.");
+		RESTIngestionEndpoint = restEndPnt;
+	}
+
+	public String getRESTIngestionEndpoint()
+	{
+		return RESTIngestionEndpoint;
+	}
+
+
 }

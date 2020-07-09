@@ -5,11 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.servlet.context.ServletWebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.annotation.Order;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -52,9 +50,8 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 
 				config.setWorkerNodePrefix(workerConfig.workerNodePrefix);
 				config.setIngestionBatchSize(workerConfig.config.ingestionBatchSize);
-				config.setIngestionJDBCPassword(workerConfig.config.ingestionJDBCPassword);
-				config.setIngestionJDBCURL(workerConfig.config.ingestionJDBCURL);
-				config.setIngestionJDBCUserName(workerConfig.config.ingestionJDBCUserName);
+				config.setRESTIngestionEndpoint(workerConfig.config.RESTIngestionEndpoint);
+
 				config.setIngestionNumThreadsPerWorker(workerConfig.config.ingestionNumThreadsPerWorker);
 				config.setIngestionWaitTimeBetweenBatchesInMillis(workerConfig.config.ingestionWaitTimeBetweenBatchesInMillis);
 				
