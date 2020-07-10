@@ -36,8 +36,8 @@ public class Config
 	INGESTION CONFIGURATION 
 	*/
 	// private String ingestionJDBCURL;
-	// private String ingestionJDBCUserName;
-	// private String ingestionJDBCPassword;
+	private String ingestionRESTUserName;
+	private String ingestionRESTPassword;
 	private int ingestionBatchSize;
 	private int ingestionNumThreadsPerWorker;
 	private String insertStatement;
@@ -306,35 +306,26 @@ public class Config
 		this.ingestionRESTSchemaVersion = ingestionRESTSchemaVersion;
 	}
 
-	// public String getIngestionJDBCURL() {
-	// 	return ingestionJDBCURL;
-	// }
-	
-	// @Value( "${INGESTION_JDBC_URL}" )
-	// public void setIngestionJDBCURL(String ingestionJDBCURL) {
-	// 	logger.info("Setting INGESTION_JDBC_URL = " + ingestionJDBCURL);
-	// 	this.ingestionJDBCURL = ingestionJDBCURL;
-	// }
 
-	// public String getIngestionJDBCUserName() {
-	// 	return ingestionJDBCUserName;
-	// }
+	public String getIngestionRESTUserName() {
+		return ingestionRESTUserName;
+	}
 	
-	// @Value( "${INGESTION_JDBC_USERNAME}" )
-	// public void setIngestionJDBCUserName(String ingestionJDBCUserName) {
-	// 	logger.info("Setting INGESTION_JDBC_USERNAME = " + ingestionJDBCUserName);
-	// 	this.ingestionJDBCUserName = ingestionJDBCUserName;
-	// }
+	@Value( "${INGESTION_REST_USERNAME}" )
+	public void setIngestionRESTUserName(String ingestionRESTUserName) {
+		logger.info("Setting INGESTION_REST_USERNAME = " + ingestionRESTUserName);
+		this.ingestionRESTUserName = ingestionRESTUserName;
+	}
 
-	// public String getIngestionJDBCPassword() {
-	// 	return ingestionJDBCPassword;
-	// }
+	public String getIngestionRESTPassword() {
+		return ingestionRESTPassword;
+	}
 	
-	// @Value( "${INGESTION_JDBC_PASSWORD}" )
-	// public void setIngestionJDBCPassword(String ingestionJDBCPassword) {
-	// 	logger.info("Setting INGESTION_JDBC_PASSWORD = " + ingestionJDBCPassword);
-	// 	this.ingestionJDBCPassword = ingestionJDBCPassword;
-	// }
+	@Value( "${INGESTION_REST_PASSWORD}" )
+	public void setIngestionRESTPassword(String ingestionRESTPassword) {
+		logger.info("Setting INGESTION_REST_PASSWORD = " + ingestionRESTPassword);
+		this.ingestionRESTPassword = ingestionRESTPassword;
+	}
 
 	public int getIngestionBatchSize() {
 		return ingestionBatchSize;

@@ -33,7 +33,8 @@ public class Config
 	private int ingestionWaitTimeBetweenBatchesInMillis;
 	private String ingestionRESTEndpoint;
 	private String ingestionRESTSchemaVersion;
-
+	private String ingestionRESTUserName;
+	private String ingestionRESTPassword;
 	
 	/*
 	 * Statements
@@ -262,6 +263,27 @@ public class Config
 	public String getIngestionRESTSchemaVersion()
 	{
 		return ingestionRESTSchemaVersion;
+	}
+
+	public void setingestionRESTUserName(String Username)
+	{
+		logger.info("Got REST endpoint.");
+		ingestionRESTUserName = Username;
+	}
+
+	public String getingestionRESTUserName()
+	{
+		return ingestionRESTUserName;
+	}
+	public void setingestionRESTPassword(String Password)
+	{
+		logger.info("Got REST endpoint.");
+		ingestionRESTPassword = Password;
+	}
+
+	public String getingestionRESTPassword()
+	{
+		return ingestionRESTPassword;
 	}
 
 

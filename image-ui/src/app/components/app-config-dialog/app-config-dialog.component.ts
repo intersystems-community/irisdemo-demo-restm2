@@ -46,9 +46,10 @@ export class AppConfigDialogComponent implements OnInit {
   createForm() {
     this.configFormGroup = this.formBuilder.group({
       'maxTimeToRunInSeconds': [null, [Validators.required]],
-      'ingestionJDBCURL': [null, [Validators.required]],
-      'ingestionJDBCUserName': [null, [Validators.required]],
-      'ingestionJDBCPassword': [null, [Validators.required]],
+      'ingestionRESTEndpoint': [null, [Validators.required]],
+      'ingestionRESTSchemaVersion': [null, [Validators.required]],
+      'ingestionRESTUserName': [null, [Validators.required]],
+      'ingestionRESTPassword': [null, [Validators.required]],
       'ingestionBatchSize': [1000, [Validators.required]],
       'ingestionNumThreadsPerWorker': [2, [Validators.required]],
       'ingestionWaitTimeBetweenBatchesInMillis': [0, [Validators.required]],
@@ -67,9 +68,10 @@ export class AppConfigDialogComponent implements OnInit {
     console.log(config);
     this.configFormGroup.setValue({
       maxTimeToRunInSeconds: config.maxTimeToRunInSeconds, 
-      ingestionJDBCURL: config.ingestionJDBCURL, 
-      ingestionJDBCUserName: config.ingestionJDBCUserName,
-      ingestionJDBCPassword: config.ingestionJDBCPassword,
+      ingestionRESTEndpoint: config.ingestionRESTEndpoint, 
+      ingestionRESTUserName: config.ingestionRESTUserName,
+      ingestionRESTSchemaVersion: config.ingestionRESTSchemaVersion,
+      ingestionRESTPassword: config.ingestionRESTPassword,
       ingestionBatchSize: config.ingestionBatchSize,
       ingestionNumThreadsPerWorker: config.ingestionNumThreadsPerWorker,
       ingestionWaitTimeBetweenBatchesInMillis: config.ingestionWaitTimeBetweenBatchesInMillis,

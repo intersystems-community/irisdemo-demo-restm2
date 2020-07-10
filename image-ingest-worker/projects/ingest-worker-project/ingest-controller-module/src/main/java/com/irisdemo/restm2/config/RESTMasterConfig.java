@@ -16,7 +16,8 @@ public class RESTMasterConfig
 	public int ingestionWaitTimeBetweenBatchesInMillis;
 	public String ingestionRESTEndpoint;
 	public String ingestionRESTSchemaVersion;
-	
+	public String ingestionRESTUserName;
+	public String ingestionRESTPassword;
 	/*
 	 * Statements
 	 */

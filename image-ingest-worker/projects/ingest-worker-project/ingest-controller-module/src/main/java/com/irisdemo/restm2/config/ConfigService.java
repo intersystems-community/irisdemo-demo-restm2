@@ -52,6 +52,8 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 				config.setIngestionBatchSize(workerConfig.config.ingestionBatchSize);
 				config.setIngestionRESTEndpoint(workerConfig.config.ingestionRESTEndpoint);
 				config.setIngestionRESTSchemaVersion(workerConfig.config.ingestionRESTSchemaVersion);
+				config.setingestionRESTUserName(workerConfig.config.ingestionRESTUserName);
+				config.setingestionRESTPassword(workerConfig.config.ingestionRESTPassword);
 
 				config.setIngestionNumThreadsPerWorker(workerConfig.config.ingestionNumThreadsPerWorker);
 				config.setIngestionWaitTimeBetweenBatchesInMillis(workerConfig.config.ingestionWaitTimeBetweenBatchesInMillis);

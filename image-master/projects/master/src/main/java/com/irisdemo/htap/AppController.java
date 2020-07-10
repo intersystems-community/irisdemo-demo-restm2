@@ -344,7 +344,9 @@ public class AppController {
         config.setIngestionBatchSize(newConfig.getIngestionBatchSize());
         config.setIngestionNumThreadsPerWorker(newConfig.getIngestionNumThreadsPerWorker());
         config.setIngestionRESTEndpoint(newConfig.getIngestionRESTEndpoint());
-
+        config.setIngestionRESTUserName(newConfig.getIngestionRESTUserName());
+        config.setIngestionRESTPassword(newConfig.getIngestionRESTPassword());
+        config.setIngestionRESTSchemaVersion(newConfig.getIngestionRESTSchemaVersion());
 
         config.setInsertStatement(newConfig.getInsertStatement());
 
