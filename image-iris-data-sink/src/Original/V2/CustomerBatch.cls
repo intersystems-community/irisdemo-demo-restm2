@@ -1,4 +1,4 @@
-Class Original.V2.CustomerBatch Extends (%Persistent, %JSON.Adaptor)
+Class Original.V2.CustomerBatch Extends (%Persistent, DataSink.OriginalDataBatch)
 {
 
 Property customers As list Of Customer;
@@ -11,6 +11,9 @@ Storage Default
 </Value>
 <Value name="2">
 <Value>customers</Value>
+</Value>
+<Value name="3">
+<Value>%DateReceived</Value>
 </Value>
 </Data>
 <DataLocation>^Original.V2.CustomerBatchD</DataLocation>
