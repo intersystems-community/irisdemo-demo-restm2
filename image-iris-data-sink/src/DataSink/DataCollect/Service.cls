@@ -14,7 +14,7 @@ Parameter SETTINGS = "-PoolSize,OriginalDataSource:Basic:selector?context={DataS
 Method OnProcessInput(pInput As %RegisteredObject, Output pOutput As %RegisteredObject) As %Status
 {
     #Dim oStmtResult As %SQL.StatementResult
-
+    
     Set tSC = $$$OK
     Try
     {
