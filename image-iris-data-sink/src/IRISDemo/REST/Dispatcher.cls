@@ -1,10 +1,10 @@
-Include DEMOMACROS
+Include Macros
 
 /// As per the documentation on https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=EREST_service, one
 /// should not use EnsLib.REST.Service to create REST business services with IRIS Interoperability. We should use %CSP.REST instead.
 /// So, this dispatcher class will serve as an example of how to create a rest service that is calling a business service while
 /// a better way of doing it is not available.
-Class IRISDemo.REST.Dispatcher Extends %CSP.REST
+Class IRISDemo.REST.Dispatcher Extends (%CSP.REST, REST.Base)
 {
 
 Parameter HandleCorsRequest = 1;
@@ -47,7 +47,7 @@ ClassMethod CreateV2Batch() As %Status
 
 ClassMethod Create(pVersion As %String, pBatchMode As %Boolean = 0) As %Status
 {
-	Set tSC = $$$OK
+	Set status = $$$OK
 	Try
 	{
 		// Configuring response type to JSON
@@ -68,31 +68,19 @@ ClassMethod Create(pVersion As %String, pBatchMode As %Boolean = 0) As %Status
 		Set original = $classmethod(tClassName, "%New")
 
 		// Importing the JSON into the instance
-		Set tSC = original.%JSONImport(%request.Content)
-		Quit:$$$ISERR(tSC)
-
+		Set status = original.%JSONImport(%request.Content)
+		$$$ThrowBadRequestExceptionIfError(status, "JSONImportException")
+		
 		// Saving to disk
-		Set tSC = original.%Save()
-		Quit:$$$ISERR(tSC)
+		Set status = original.%Save()
+		$$$ThrowStatusExceptionIfError(status, "SaveObjectException")
 
-		Set response.id=original.%Id()
+		Do ..ReportHTTPStatusCreated(original.%Id())
 	}
 	Catch (oException)
 	{
-		Set tSC = oException.AsStatus()
+		Do ..ErrorHandling(oException)
 	}
-
-	If $$$ISERR(tSC)
-	{
-		Set %response.Status = ..#HTTP500INTERNALSERVERERROR
-		Set response.status = ..#HTTP500INTERNALSERVERERROR
-		
-		// Bad practice:
-		Set response.statusError = $System.Status.GetErrorText(tSC)
-	}
-
-	// Whatever the response is, let's send it
-	Write response.%ToJSON()
 
 	Quit $$$OK
 }

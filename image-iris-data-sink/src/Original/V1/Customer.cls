@@ -38,6 +38,12 @@ Storage Default
 <Value name="8">
 <Value>name</Value>
 </Value>
+<Value name="9">
+<Value>%SessionId</Value>
+</Value>
+<Value name="10">
+<Value>%DataSourceName</Value>
+</Value>
 </Data>
 <DataLocation>^Original.V1.CustomerD</DataLocation>
 <DefaultData>CustomerDefaultData</DefaultData>

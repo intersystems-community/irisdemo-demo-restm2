@@ -1,4 +1,4 @@
-Class Canonical.Address Extends %SerialObject
+Class Canonical.Address Extends (%SerialObject, REST.JSONRequest)
 {
 
 Property State As %String [ Required ];

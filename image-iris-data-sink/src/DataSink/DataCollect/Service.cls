@@ -38,15 +38,19 @@ Method OnProcessInput(pInput As %RegisteredObject, Output pOutput As %Registered
         {
             Set id = oStmtResult.%GetData(1)
             Set obj = $classmethod(..OriginalDataSource,"%OpenId",id)
-            
+
+            Set ..%SessionId=""
+            Do ..ForceSessionId()
+
             Set tSC = ..SendRequestAsync(..TargetConfigName, obj)
             Quit:$$$ISERR(tSC)
 
             Set obj.%ProcessingStatus="PROC"
+            Set obj.%SessionId=..%SessionId
             Set tSC = obj.%Save()
             Quit:$$$ISERR(tSC)
 
-            Set ..%SessionId=""
+            
         }
         
     }

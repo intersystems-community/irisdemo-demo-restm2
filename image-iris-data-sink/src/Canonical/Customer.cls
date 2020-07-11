@@ -1,4 +1,4 @@
-Class Canonical.Customer Extends %Persistent
+Class Canonical.Customer Extends (%Persistent, DataSink.CanonicalData)
 {
 
 Property AccountId As %String [ Required ];
@@ -16,7 +16,7 @@ Storage Default
 <Value>%%CLASSNAME</Value>
 </Value>
 <Value name="2">
-<Value>AccountId</Value>
+<Value>%SessionId</Value>
 </Value>
 <Value name="3">
 <Value>FullName</Value>
@@ -26,6 +26,15 @@ Storage Default
 </Value>
 <Value name="5">
 <Value>Address</Value>
+</Value>
+<Value name="6">
+<Value>AccountId</Value>
+</Value>
+<Value name="7">
+<Value>%DataSourceName</Value>
+</Value>
+<Value name="8">
+<Value>%VersionDateTime</Value>
 </Value>
 </Data>
 <DataLocation>^Canonical.CustomerD</DataLocation>
