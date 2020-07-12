@@ -39,4 +39,4 @@ As you can see, the two JSON documents are very similar. The idea is to show how
 
 Here is the architecture of the demo:
 
-![Architecture of Demo](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-restm2/master/landing-page.png?raw=true)
+![Architecture of Demo](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-restm2/master/Architecture.png?raw=true)
