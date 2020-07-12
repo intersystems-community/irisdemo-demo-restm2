@@ -22,6 +22,12 @@ build_java_project "image-ingest-worker"
 
 build_java_project "image-query-worker"
 
+UI_IMAGE_NAME=intersystemsdc/irisdemo-demo-restm2:iris-data-sink-${DOCKER_TAG}
+docker build -t $UI_IMAGE_NAME ./image-iris-data-sink
+# This  image was not built with the function build_java_project(). So we will
+# add the full image name ourselves.
+echo $UI_IMAGE_NAME >> ./images_built
+
 UI_IMAGE_NAME=intersystemsdc/irisdemo-demo-restm2:ui-${DOCKER_TAG}
 docker build -t $UI_IMAGE_NAME ./image-ui
 echo $UI_IMAGE_NAME >> ./images_built
