@@ -64,7 +64,19 @@ XData Install [ XMLNamespace = INSTALLER ]
 	<Invoke Class="IRISConfig.Installer" Method="LoadUSStates" CheckStatus="true">
 		<Arg name="pNamespace" Value="${Namespace}"/>
 	</Invoke>
-
+		
+	<Invoke Class="IRISConfig.Installer" Method="AddWFRole" CheckStatus="true">
+		<Arg name="pNamespace" Value="${Namespace}"/>
+		<Arg name="pRoleName" Value="Application Specialist"/>
+	</Invoke>
+		
+	<Invoke Class="IRISConfig.Installer" Method="AddWFUser" CheckStatus="true">
+		<Arg name="pNamespace" Value="${Namespace}"/>
+		<Arg name="pUserName" Value="SuperUser"/>
+		<Arg name="pFullName" Value="Mr Anderson"/>
+		<Arg name="pRoleName" Value="Application Specialist"/>
+	</Invoke>
+	
 </Manifest>
 }
 }

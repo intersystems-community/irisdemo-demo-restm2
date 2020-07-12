@@ -90,7 +90,7 @@ public class IRISWorker implements IWorker
 			
 			while(workerSemaphore.green())
 			{
-				RandomDataGenerator.populateJSONRequest(requestJSON, threadPrefix, schema, ++currentRecord);
+				randomDataGenerator.populateJSONRequest(requestJSON, threadPrefix, schema, ++currentRecord);
 				
 
 				if (config.getIngestionBatchSize() == 1)
@@ -99,7 +99,7 @@ public class IRISWorker implements IWorker
 
 					HttpEntity<String> request = new HttpEntity<String>(requestString, headers);
 
-					String response = restTemplate.postForObject(Iris_REST_Endpoint, request, String.class);
+					restTemplate.postForObject(Iris_REST_Endpoint, request, String.class);
 
 					accumulatedMetrics.addToStats(1, requestString.getBytes().length);
 

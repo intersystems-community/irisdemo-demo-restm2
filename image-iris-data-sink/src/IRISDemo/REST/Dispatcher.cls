@@ -18,11 +18,23 @@ Parameter CHARSET = "utf-8";
 XData UrlMap
 {
 <Routes>
-		<Route Url="/v1" Method="post" Call="CreateV1" />
-		<Route Url="/v1/batch" Method="post" Call="CreateV1Batch" />
-		<Route Url="/v2" Method="post" Call="CreateV2" />
-		<Route Url="/v2/batch" Method="post" Call="CreateV2Batch" />
-	</Routes>
+	<Route Url="/v1/:id" Method="get" Call="GetV1" />
+	<Route Url="/v2/:id" Method="get" Call="GetV2" />
+	<Route Url="/v1" Method="post" Call="CreateV1" />
+	<Route Url="/v1/batch" Method="post" Call="CreateV1Batch" />
+	<Route Url="/v2" Method="post" Call="CreateV2" />
+	<Route Url="/v2/batch" Method="post" Call="CreateV2Batch" />
+</Routes>
+}
+
+ClassMethod GetV1(id) As %Status
+{
+	Quit ..Get("V1", id)
+}
+
+ClassMethod GetV2(id) As %Status
+{
+	Quit ..Get("V2", id)
 }
 
 ClassMethod CreateV1() As %Status
@@ -52,9 +64,10 @@ ClassMethod Create(pVersion As %String, pBatchMode As %Boolean = 0) As %Status
 	{
 		// Configuring response type to JSON
 		Set %response.ContentType=..#CONTENTTYPEJSON
+		Set %response.Status = ..#HTTP200OK
+		
 		Set response = {}
-		Set response.status = ..#HTTP200OK
-
+		
 		// Instantiating the right class for the version
 		If pBatchMode
 		{
@@ -76,6 +89,30 @@ ClassMethod Create(pVersion As %String, pBatchMode As %Boolean = 0) As %Status
 		$$$ThrowStatusExceptionIfError(status, "SaveObjectException")
 
 		Do ..ReportHTTPStatusCreated(original.%Id())
+	}
+	Catch (oException)
+	{
+		Do ..ErrorHandling(oException)
+	}
+
+	Quit $$$OK
+}
+
+ClassMethod Get(pVersion As %String, pID As %String) As %Status
+{
+	Set status = $$$OK
+	Try
+	{
+		Set %response.Status = ..#HTTP200OK
+		Set %response.ContentType=..#CONTENTTYPEJSON
+
+		Set tClassName="Original."_pVersion_".Customer"
+		
+		Set obj = $classmethod(tClassName, "%OpenId", pID)
+		
+		If obj="" $$$ThrowNotFoundException("Customer with id "_pID_" not found")
+
+		Do obj.%JSONExport()
 	}
 	Catch (oException)
 	{

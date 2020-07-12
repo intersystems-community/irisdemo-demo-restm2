@@ -75,16 +75,31 @@ public class RandomDataGenerator
 		randomMappingInitialized = true;
 	}
 
-	public static void populateJSONRequest(JSONObject request, String threadPrefix, String schema, int recordNum)
+	public void populateJSONRequest(JSONObject request, String threadPrefix, String schema, int recordNum)
 	{
-
-
-
 		int numberOfRandomValues = 999;
 		JSONObject address = (JSONObject)request.get("address");
 
 		address.put("street", randomStreets[(int)(Math.random()*numberOfRandomValues)]);
-		address.put("state", randomStates[(int)(Math.random()*numberOfRandomValues)]);
+
+		if (config.getIngestionRESTSchemaVersion().equals("v1"))
+		{
+			address.put("state", randomStates[(int)(Math.random()*numberOfRandomValues)]);
+		}
+		else
+		{
+			if ((int)(Math.random()*1000)!=1)
+			{
+				address.put("state", randomStates[(int)(Math.random()*numberOfRandomValues)]);
+			}
+			else
+			{
+				// On schema v2, injecting one invalid state every 1000 records
+				address.put("state", "XX");
+			}
+			
+		}
+
 		address.put("city", randomCities[(int)(Math.random()*numberOfRandomValues)]);
 
 		request.put("dob", randomDates[(int)(Math.random()*numberOfRandomValues)]);
