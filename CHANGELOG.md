@@ -1,3 +1,7 @@
+## 1.1.0 (July 13, 2020)
+  - Adding DTL as a column to the canonical model
+  - Making worker wait for master
+
 ## 1.0.5 (July 13, 2020)
   - Changing color of JSON
 
