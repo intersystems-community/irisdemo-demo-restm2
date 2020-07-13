@@ -1,3 +1,6 @@
+## 1.0.5 (July 13, 2020)
+  - Changing color of JSON
+
 ## 1.0.4 (July 12, 2020)
   - Adding alerts to process
 
