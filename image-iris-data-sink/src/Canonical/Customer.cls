@@ -19,22 +19,25 @@ Storage Default
 <Value>%SessionId</Value>
 </Value>
 <Value name="3">
-<Value>FullName</Value>
+<Value>%DataSourceName</Value>
 </Value>
 <Value name="4">
-<Value>DateOfBirth</Value>
+<Value>%DTL</Value>
 </Value>
 <Value name="5">
-<Value>Address</Value>
+<Value>%VersionDateTime</Value>
 </Value>
 <Value name="6">
 <Value>AccountId</Value>
 </Value>
 <Value name="7">
-<Value>%DataSourceName</Value>
+<Value>Address</Value>
 </Value>
 <Value name="8">
-<Value>%VersionDateTime</Value>
+<Value>DateOfBirth</Value>
+</Value>
+<Value name="9">
+<Value>FullName</Value>
 </Value>
 </Data>
 <DataLocation>^Canonical.CustomerD</DataLocation>

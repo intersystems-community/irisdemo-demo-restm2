@@ -23,15 +23,35 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <parameter name='MAXLEN'  value='2500' />
 </parameters>
 </property>
+
+<property name='Transformation' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='500' />
+</parameters>
+</property>
+
 </context>
 <sequence xend='200' yend='700' >
-<if name='Normalize?' condition='$parameter(request,"%DTL")&apos;=""' xpos='200' ypos='250' xend='200' yend='500' >
+
+<assign name="Get Transformation Class" property="context.Transformation" value='$parameter(request,"%DTL")' action="set" xpos='200' ypos='450' />
+<if name='Normalize?' condition='context.Transformation&apos;=""' xpos='200' ypos='250' xend='200' yend='500' >
 <true>
 <while name='Try to normalize' condition='context.Action="Normalize"' xpos='470' ypos='400' xend='200' yend='800' >
 <scope xpos='200' ypos='250' xend='200' yend='700' >
 <code name='Transform' xpos='200' ypos='350' >
 <![CDATA[ 
 	
+
+
+
+
+
+
+
+
+
+
+
 	/*
 	 If I use a <transform> activity with indirection (@$parameter(request,"%DTL")), and 
 	 assign the returned object to the context, and an error is produced when the context is
@@ -44,10 +64,12 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 	 the <scope> will capture the problem and take us to the <catchall> activity. 
 	*/ 
 	
-	Set tTransformClass=$parameter(request,"%DTL")
-	Set status = $classmethod(tTransformClass, "Transform", request, .normalizedRequest)
+	Set status = $classmethod(context.Transformation, "Transform", request, .normalizedRequest)
 	If $$$ISERR(status) Quit
 	
+	Set normalizedRequest.%DTL=context.Transformation
+	Set normalizedRequest.%SessionId = process.%SessionId
+
 	Set status = normalizedRequest.%Save()
 	If $$$ISERR(status) Quit
 	
