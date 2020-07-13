@@ -1,6 +1,9 @@
 package com.irisdemo.restm2.config;
 
 import org.springframework.stereotype.Service;
+
+import java.net.ConnectException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +47,14 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
     	
 		logger.info("Registering with " + registrationUrl);
 		
-		try
-		{    			
-			RESTWorkerConfig workerConfig = restTemplate.getForObject(registrationUrl, RESTWorkerConfig.class);
+		boolean retry = true;
+		int retryCount = 0;
+
+		do 
+		{	
+			try
+			{    			
+				RESTWorkerConfig workerConfig = restTemplate.getForObject(registrationUrl, RESTWorkerConfig.class);
 
 				config.setWorkerNodePrefix(workerConfig.workerNodePrefix);
 				config.setIngestionBatchSize(workerConfig.config.ingestionBatchSize);
@@ -71,11 +79,25 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 				config.setDatabaseSizeInGB(workerConfig.config.databaseSizeInGB);
 				
 				logger.info("Registration successful. Configuration data received and stored.");
-		}
-		catch (RestClientException restException)
-		{
-			logger.info("Worker on " + config.getThisHostName() + " is not responding. Marking worker as unavailablebecause of: " + restException.getMessage());
-		}
-    	
+
+				//We did it! No need for retrying
+				retry = false;
+			}
+			catch (Exception restException)
+			{
+				// Wait for 1 second an try again
+				if (retryCount<15)
+				{
+					logger.info("Count not register with master. Retrying in 1 second...");
+					Thread.sleep(1000);
+				}
+				else
+				{
+					logger.info("Worker on " + config.getThisHostName() + " is not responding. Marking worker as unavailablebecause of: " + restException.getMessage());
+					retry = false;
+				}
+			}
+		} 
+		while (retry);
 	} 
 }
