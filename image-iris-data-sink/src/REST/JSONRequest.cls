@@ -17,7 +17,7 @@ Method %ShowContents(pZenOutput As %Boolean = 0)
         .number { color: darkorange; }
         .boolean { color: blue; }
         .null { color: magenta; }
-        .key { color: red; }
+        .key { color: #d75f00; }
     </style>
     >
     Write "<script language=""javascript"">"
