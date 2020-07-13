@@ -139,3 +139,17 @@ To see the workflow tickets appearing in your workflow inbox, just click on the 
 
 The simulator **settings** allow you to configure the **Ingestion Batch Size**. It comes with a default value of 1 which is very slow. It is good for demos since it won't flood InterSystmes IRIS with messages while you are speaking and explaining things. But if you want to show more speed, try increasing the batch size to 1000. The simulator will show a much higher ingestion rate.
 
+# Other demo applications
+
+There are other IRIS demo applications that touch different subjects such as NLP, ML, Integration with AWS services, Twitter services, performance benchmarks etc. Here are some of them:
+* [HTAP Demo](https://github.com/intersystems-community/irisdemo-demo-htap) - Hybrid Transaction-Analytical Processing benchmark. See how fast IRIS can insert and query at the same time. You will notice it is up to 20x faster than AWS Aurora!
+* [Twitter Sentiment Analysis](https://github.com/intersystems-community/irisdemo-demo-twittersentiment) - Shows how IRIS can be used to consume Tweets in realtime and use its NLP (natural language processing) and business rules capabilities to evaluate the tweet's sentiment and the metadata to make decisions on when to contact someone to offer support.
+* [HL7 Appointments and SMS (text messages) application](https://github.com/intersystems-community/irisdemo-demo-appointmentsms) -  Shows how IRIS for Health can be used to parse HL7 appointment messages to send SMS (text messages) appointment reminders to patients. It also shows real time dashboards based on appointments data stored in a normalized data lake.
+* [The Readmission Demo](https://github.com/intersystems-community/irisdemo-demo-readmission) - Patient Readmissions are said to be the "Hello World of Machine Learning" in Healthcare. On this demo, we use this problem to show how IRIS can be used to **safely build and operationalize** ML models for real time predictions and how this can be integrated into a random application. This **IRIS for Health** demo seeks to show how a full solution for this problem can be built.
+* [Fraud Prevention](https://github.com/intersystems-community/irisdemo-demo-fraudprevention) - Apply Machine Learning and Business Rules to prevent frauds in financial services transactions using InterSystems IRIS.
+* [Financial Transactions with Fraud and Rewards/cross-sell](https://github.com/intersystems-community/irisdemo-demo-finsrv-crosssell) - Process credit card transactions while keeping a hot data lake current with data aggregated from your core systems. Use this aggregated data to prevent frauds and verify customer elegibility for for rewards as an example of cross-selling. 
+
+
+# Report any Issues
+
+Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-finsrv-crosssell/issues).
