@@ -11,6 +11,7 @@ This demo allows you to show:
 - How InterSytems IRIS can do **schema evolution** by allowing developers to keep adding new schemas while maintaining proper data lineage
 - When configured in batch mode, how InterSystems IRIS can ingest documents at **high speed**
 
+See a [video of this demo](https://youtu.be/DWIYkke3EM8).
 
 ## How to run the demo
 
