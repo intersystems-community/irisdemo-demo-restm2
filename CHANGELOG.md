@@ -1,3 +1,7 @@
+## 1.1.1 (July 21, 2020)
+  - Fixing title of demo and HTML links to JSON documents
+  - Adding references to other demos
+
 ## 1.1.0 (July 13, 2020)
   - Adding DTL as a column to the canonical model
   - Making worker wait for master
