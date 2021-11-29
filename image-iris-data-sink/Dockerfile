@@ -1,4 +1,4 @@
-FROM intersystemsdc/irisdemo-base-irisint-community:version-1.6
+FROM intersystemsdc/irisdemo-base-irisint-community:version-1.9.7
 
 # Name of the project folder ex.: my-atelier-project
 #ARG IRIS_PROJECT_FOLDER_NAME=iris-opcua-oee
