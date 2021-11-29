@@ -1,3 +1,8 @@
+## 1.1.1 (November 29, 2021)
+  - Bumping IRIS base image to 1.9.7 (which is based on IRIS 2021.1.0.215.3)
+  - Adding link to video
+  - Adding references to other demos
+
 ## 1.1.0 (July 13, 2020)
   - Adding DTL as a column to the canonical model
   - Making worker wait for master
