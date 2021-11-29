@@ -1,5 +1,6 @@
-## 1.1.1 (November 29, 2021)
+## 1.1.2 (November 29, 2021)
   - Bumping IRIS base image to 1.9.7 (which is based on IRIS 2021.1.0.215.3)
+  - Fixing title of demo and HTML links to JSON documents
   - Adding link to video
   - Adding references to other demos
 
